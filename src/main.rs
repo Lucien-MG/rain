@@ -5,27 +5,41 @@ pub mod agents;
 pub mod environments;
 
 fn main() {
-    println!("Launch exp!");
+    let experiences = vec![
+        (
+            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            agents::random::RandomAgent::new(10),
+        ),
+        (
+            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            agents::random::RandomAgent::new(10),
+        ),
+        (
+            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            agents::random::RandomAgent::new(10),
+        ),
+    ];
+
+    println!("Launch exps!");
 
     let now = Instant::now();
 
-    let mut running_threads = Vec::with_capacity(10);
+    let mut running_threads = Vec::with_capacity(experiences.len());
 
-    for i in 0..8 {
+    for exp in experiences {
+        let (mut env, mut agent) = exp;
+
         let handle = thread::spawn(move || {
-            println!("Run exp {}", i);
-            let size = 10;
-            let agent = agents::random::RandomAgent::new(size);
-            let env = environments::NArmedBanditEnv::new(size);
-            run_env(&env, &agent);
-            println!("End exp {}", i);
+            println!("-> Start exp {}", env.name);
+            train_env(&mut env, &mut agent, 2000);
+            println!("<- End exp {}", env.name);
             // println!("Test {:#?}", env);
         });
         running_threads.push(handle);
     }
 
     for thread in running_threads {
-        thread.join();
+        let _ = thread.join();
     }
 
     let elapsed = now.elapsed();
@@ -33,10 +47,29 @@ fn main() {
     println!("Elapsed: {:.?}", elapsed);
 }
 
-fn run_env(env: &environments::NArmedBanditEnv, agent: &agents::random::RandomAgent) -> () {
-    for _ in 0..1_000_000 {
+fn train_env(
+    env: &mut environments::karmed::NArmedBanditEnv,
+    agent: &mut agents::random::RandomAgent,
+    nb_run: u32,
+) -> () {
+    for _ in 0..nb_run {
+        run_env(env, agent);
+
+        env.reset();
+    }
+}
+
+fn run_env(
+    env: &mut environments::karmed::NArmedBanditEnv,
+    agent: &mut agents::random::RandomAgent,
+) -> () {
+    loop {
         let action = agent.action();
-        let _res = (&env).step(action);
-        //        println!("test: {}.", env.step(action));
+
+        let (_reward, terminated) = env.step(action);
+
+        if terminated {
+            break;
+        }
     }
 }
