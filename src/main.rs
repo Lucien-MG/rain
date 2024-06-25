@@ -10,10 +10,10 @@ fn main() {
             environments::karmed::KArmedBanditEnv::new(10, 1000),
             agents::random::RandomAgent::new(10),
         ),
-        (
+        /*(
             environments::karmed::KArmedBanditEnv::new(10, 1000),
-            agents::random::RandomAgent::new(10),
-        ),
+            agents::egreedy::Egreedy::new(10, 0.1),
+        ),*/
         (
             environments::karmed::KArmedBanditEnv::new(10, 1000),
             agents::random::RandomAgent::new(10),
