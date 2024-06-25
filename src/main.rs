@@ -7,15 +7,15 @@ pub mod environments;
 fn main() {
     let experiences = vec![
         (
-            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            environments::karmed::KArmedBanditEnv::new(10, 1000),
             agents::random::RandomAgent::new(10),
         ),
         (
-            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            environments::karmed::KArmedBanditEnv::new(10, 1000),
             agents::random::RandomAgent::new(10),
         ),
         (
-            environments::karmed::NArmedBanditEnv::new(10, 1000),
+            environments::karmed::KArmedBanditEnv::new(10, 1000),
             agents::random::RandomAgent::new(10),
         ),
     ];
@@ -48,19 +48,18 @@ fn main() {
 }
 
 fn train_env(
-    env: &mut environments::karmed::NArmedBanditEnv,
+    env: &mut environments::karmed::KArmedBanditEnv,
     agent: &mut agents::random::RandomAgent,
     nb_run: u32,
 ) -> () {
     for _ in 0..nb_run {
         run_env(env, agent);
-
         env.reset();
     }
 }
 
 fn run_env(
-    env: &mut environments::karmed::NArmedBanditEnv,
+    env: &mut environments::karmed::KArmedBanditEnv,
     agent: &mut agents::random::RandomAgent,
 ) -> () {
     loop {

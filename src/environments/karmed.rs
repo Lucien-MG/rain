@@ -4,16 +4,16 @@ use rand::distributions::Standard;
 use rand::prelude::*;
 
 #[derive(Debug)]
-pub struct NArmedBanditEnv {
+pub struct KArmedBanditEnv {
     pub name: String,
     arms: Vec<f32>,
     nb_steps: u32,
     step: u32,
 }
 
-impl NArmedBanditEnv {
-    pub fn new(nb_arms: usize, nb_steps: u32) -> NArmedBanditEnv {
-        NArmedBanditEnv {
+impl KArmedBanditEnv {
+    pub fn new(nb_arms: usize, nb_steps: u32) -> KArmedBanditEnv {
+        KArmedBanditEnv {
             name: String::from_str("k-armed").unwrap(),
             arms: (0..nb_arms)
                 .map(|_| StdRng::from_entropy().sample(Standard))
