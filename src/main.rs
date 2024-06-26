@@ -1,24 +1,25 @@
 use std::thread;
 use std::time::Instant;
 
+use crate::agents::agent;
+
 pub mod agents;
 pub mod environments;
 
 fn main() {
-    let experiences = vec![
-        (
-            environments::karmed::KArmedBanditEnv::new(10, 1000),
-            agents::random::RandomAgent::new(10),
-        ),
-        /*(
-            environments::karmed::KArmedBanditEnv::new(10, 1000),
-            agents::egreedy::Egreedy::new(10, 0.1),
-        ),*/
-        (
-            environments::karmed::KArmedBanditEnv::new(10, 1000),
-            agents::random::RandomAgent::new(10),
-        ),
-    ];
+    let exp1 = (
+        environments::karmed::KArmedBanditEnv::new(10, 1000),
+        Box::new(agents::random::RandomAgent::new(10)),
+    );
+    let exp2 = (
+        environments::karmed::KArmedBanditEnv::new(10, 1000),
+        Box::new(agents::egreedy::Egreedy::new(10, 0.1)),
+    );
+    let experiences: Vec<(environments::karmed::KArmedBanditEnv, &dyn agent::Agent)> = Vec::new();
+    let tests: Vec<Box<dyn agent::Agent>> = Vec::new();
+
+    let test: agent::Agent = agents::egreedy::Egreedy::new(10, 0.1);
+    tests.push(Box::new(test));
 
     println!("Launch exps!");
 
@@ -49,7 +50,7 @@ fn main() {
 
 fn train_env(
     env: &mut environments::karmed::KArmedBanditEnv,
-    agent: &mut agents::random::RandomAgent,
+    agent: &mut dyn agents::Agent,
     nb_run: u32,
 ) -> () {
     for _ in 0..nb_run {
@@ -58,10 +59,7 @@ fn train_env(
     }
 }
 
-fn run_env(
-    env: &mut environments::karmed::KArmedBanditEnv,
-    agent: &mut agents::random::RandomAgent,
-) -> () {
+fn run_env(env: &mut environments::karmed::KArmedBanditEnv, agent: &mut dyn agents::Agent) -> () {
     loop {
         let action = agent.action();
 
