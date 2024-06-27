@@ -43,7 +43,7 @@ impl agents::Agent for Egreedy {
         &self.action_vec
     }
 
-    fn learn(&mut self, action: Vec<f32>, reward: f32) -> () {
-        self.q_values[action] += self.q_values[action] + reward;
+    fn learn(&mut self, action: &Vec<f32>, reward: f32) -> () {
+        self.q_values[0] += self.q_values[0] + reward;
     }
 }

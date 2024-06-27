@@ -3,6 +3,8 @@ use std::str::FromStr;
 use rand::distributions::Standard;
 use rand::prelude::*;
 
+use crate::environments;
+
 #[derive(Debug)]
 pub struct KArmedBanditEnv {
     pub name: String,
@@ -22,16 +24,18 @@ impl KArmedBanditEnv {
             step: 0,
         }
     }
+}
 
-    pub fn step(&mut self, a: usize) -> (f32, bool) {
+impl environments::Environement for KArmedBanditEnv {
+    fn step(&mut self, actions: &Vec<f32>) -> (f32, bool) {
         self.step += 1;
         (
-            self.arms[a] + StdRng::from_entropy().sample::<f32, Standard>(Standard),
+            self.arms[0] + StdRng::from_entropy().sample::<f32, Standard>(Standard),
             self.step >= self.nb_steps,
         )
     }
 
-    pub fn reset(&mut self) -> () {
+    fn reset(&mut self) -> () {
         self.step = 0;
     }
 }

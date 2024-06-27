@@ -19,9 +19,12 @@ impl RandomAgent {
 impl agents::Agent for RandomAgent {
     fn action(&mut self) -> &Vec<f32> {
         let action_to_explore = rand::thread_rng().gen_range(0..self.action_space);
+
+        self.action_vec.fill(0.0);
         self.action_vec[action_to_explore] = 1.0;
+
         &self.action_vec
     }
 
-    fn learn(&mut self, action: Vec<f32>, reward: f32) -> () {}
+    fn learn(&mut self, _action: &Vec<f32>, _reward: f32) -> () {}
 }
