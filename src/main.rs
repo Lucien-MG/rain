@@ -1,6 +1,8 @@
 use std::thread;
 use std::time::Instant;
 
+use crate::agents::Agent;
+
 pub mod agents;
 pub mod environments;
 
@@ -8,7 +10,7 @@ fn main() {
     let mut env = environments::karmed::KArmedBanditEnv::new(10, 1000);
 
     let mut agent_0 = agents::random::RandomAgent::new(10);
-    let mut agent_1 = agents::egreedy::Egreedy::new(10, 0.1);
+    // let mut agent_1 = agents::egreedy::Egreedy::new(10, 0.1);
 
     println!("Launch exps!");
 
@@ -32,33 +34,39 @@ fn main() {
         let _ = thread.join();
     }*/
     let mean_reward = train_env(&mut env, &mut agent_0, 2000);
-    let mean_reward = train_env(&mut env, &mut agent_1, 2000);
+    // let mean_reward = train_env(&mut env, &mut agent_1, 2000);
 
     let elapsed = now.elapsed();
 
     println!("Elapsed: {:.?}", elapsed);
-    println!("Mean Reward: {:.?}", mean_reward);
+    println!("Mean Reward: {}", mean_reward);
 }
 
 fn train_env<E: environments::Environement, A: agents::Agent>(
     env: &mut E,
     agent: &mut A,
     nb_run: u32,
-) -> () {
+) -> f32 {
+    let mut mean_reward = 0.0;
+
     for _ in 0..nb_run {
-        run_env(env, agent);
+        mean_reward = run_env(env, agent);
     }
+
+    mean_reward
 }
 
 fn run_env<E: environments::Environement, A: agents::Agent>(env: &mut E, agent: &mut A) -> f32 {
     let mut mean_reward = 0.0;
 
-    env.reset();
+    let state = env.reset();
 
     loop {
         let action = agent.action();
 
-        let (reward, terminated) = env.step(action);
+        let (reward, terminated) = env.step(&action);
+
+        agent.learn(reward);
 
         mean_reward += reward;
 
@@ -66,8 +74,6 @@ fn run_env<E: environments::Environement, A: agents::Agent>(env: &mut E, agent: 
             break;
         }
     }
-
-    // agent.learn(action, reward);
 
     mean_reward
 }

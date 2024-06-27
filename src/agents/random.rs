@@ -4,27 +4,23 @@ use crate::agents;
 
 pub struct RandomAgent {
     action_space: usize,
-    action_vec: Vec<f32>,
 }
 
 impl RandomAgent {
     pub fn new(action_space: usize) -> RandomAgent {
-        RandomAgent {
-            action_space,
-            action_vec: vec![0.0; action_space],
-        }
+        RandomAgent { action_space }
     }
 }
 
 impl agents::Agent for RandomAgent {
-    fn action(&mut self) -> &Vec<f32> {
+    fn action(&mut self) -> Vec<f32> {
         let action_to_explore = rand::thread_rng().gen_range(0..self.action_space);
+        let mut action = vec![0.0; self.action_space];
 
-        self.action_vec.fill(0.0);
-        self.action_vec[action_to_explore] = 1.0;
+        action[action_to_explore] = 1.0;
 
-        &self.action_vec
+        action
     }
 
-    fn learn(&mut self, _action: &Vec<f32>, _reward: f32) -> () {}
+    fn learn(&mut self, _reward: f32) -> () {}
 }
