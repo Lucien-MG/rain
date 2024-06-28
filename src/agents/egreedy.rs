@@ -6,6 +6,9 @@ pub struct Egreedy {
     action_space: usize,
     epsilon: f32,
 
+    action_reward: Vec<f32>,
+    action_taken: Vec<u32>,
+
     q_values: Vec<f32>,
 }
 
@@ -14,6 +17,8 @@ impl Egreedy {
         Egreedy {
             action_space,
             epsilon,
+            action_reward: vec![0.0; action_space],
+            action_taken: vec![0; action_space],
             q_values: vec![0.0; action_space],
         }
     }
@@ -22,7 +27,6 @@ impl Egreedy {
 impl agents::Agent for Egreedy {
     fn action(&mut self) -> Vec<f32> {
         let mut action_vec = vec![0.0; self.action_space];
-
         let rand_action = rand::thread_rng().gen_range(0.0..1.0);
 
         if rand_action < self.epsilon {
@@ -41,7 +45,7 @@ impl agents::Agent for Egreedy {
         action_vec
     }
 
-    fn learn(&mut self, action: &Vec<f32>, reward: f32) -> () {
+    fn learn(&mut self, action: Vec<f32>, reward: f32) -> () {
         self.q_values[0] += self.q_values[0] + reward;
     }
 }

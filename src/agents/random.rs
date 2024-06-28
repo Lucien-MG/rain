@@ -22,5 +22,5 @@ impl agents::Agent for RandomAgent {
         action
     }
 
-    fn learn(&mut self, _reward: f32) -> () {}
+    fn learn(&mut self, _action: Vec<f32>, _reward: f32) -> () {}
 }
