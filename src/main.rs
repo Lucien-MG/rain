@@ -10,7 +10,7 @@ fn main() {
     let mut env = environments::karmed::KArmedBanditEnv::new(10, 1000);
 
     let mut agent_0 = agents::random::RandomAgent::new(10);
-    let mut agent_1 = agents::egreedy::Egreedy::new(10, 0.1);
+    // let mut agent_1 = agents::egreedy::Egreedy::new(10, 0.1);
 
     println!("Launch exps!");
 
@@ -34,14 +34,14 @@ fn main() {
         let _ = thread.join();
     }*/
     let mean_reward_1 = train_env(&mut env, &mut agent_0, 2000);
-    let mean_reward_2 = train_env(&mut env, &mut agent_1, 2000);
+    // let mean_reward_2 = train_env(&mut env, &mut agent_1, 2000);
 
     let elapsed = now.elapsed();
 
     println!("Elapsed: {:.?}", elapsed);
 
     println!("Mean Reward random: {}", mean_reward_1);
-    println!("Mean Reward egreedy: {}", mean_reward_2);
+    // println!("Mean Reward egreedy: {}", mean_reward_2);
 }
 
 fn train_env<E: environments::Environement, A: agents::Agent>(
