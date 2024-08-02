@@ -1,4 +1,4 @@
-//pub mod egreedy;
+pub mod egreedy;
 pub mod random;
 
 pub trait Agent {

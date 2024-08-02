@@ -13,6 +13,17 @@ pub struct KArmedBanditEnv {
     step: u32,
 }
 
+fn argmax(v: &Vec<f32>) -> usize {
+    let mut index_max = 0;
+    for i in 0..v.len() {
+        if v[i] > v[index_max] {
+            index_max = i;
+        }
+    }
+
+    return index_max;
+}
+
 impl KArmedBanditEnv {
     pub fn new(nb_arms: usize, nb_steps: u32) -> KArmedBanditEnv {
         KArmedBanditEnv {
@@ -30,12 +41,15 @@ impl environments::Environement for KArmedBanditEnv {
     fn step(&mut self, actions: &Vec<f32>) -> (f32, bool) {
         self.step += 1;
         (
-            self.arms[0] + StdRng::from_entropy().sample::<f32, Standard>(Standard),
+            self.arms[argmax(actions)] + StdRng::from_entropy().sample::<f32, Standard>(Standard),
             self.step >= self.nb_steps,
         )
     }
 
     fn reset(&mut self) -> () {
+        self.arms = (0..self.arms.len())
+            .map(|_| StdRng::from_entropy().sample(Standard))
+            .collect();
         self.step = 0;
     }
 }
